@@ -5,7 +5,7 @@ from ..noise import estimate_noise_ps, estimate_noise_tv
 from ..models import *
 from ..stats import *
 from math import log
-import pyfits
+from astropy.io import fits as pyfits
 import numpy as np
 from copy import copy, deepcopy
 
@@ -403,7 +403,7 @@ class SigmaThresholdMethod():
         elif noiseestmethod == 'tailveto':
             self.sigma = estimate_noise_tv(self.lightcurve.clc, sigma=tvsigma)[0]
         else:
-            print "Error... noise estimation method not recognised"
+            print("Error... noise estimation method not recognised")
 
     def thresholder(self, sigmathresh=4.5, mincontiguous=3, usemedian=False, removeedges=True):
         """
@@ -634,7 +634,7 @@ class OddsRatioDetector():
         elif noiseestmethod == 'tailveto':
             self.tvsigma = tvsigma
         else:
-            print "Noise estimation method %s not recognised" % noiseestmethod
+            print("Noise estimation method %s not recognised" % noiseestmethod)
 
     def set_noise_poly(self, noisepoly=True):
         """

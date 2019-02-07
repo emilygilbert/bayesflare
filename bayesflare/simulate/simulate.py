@@ -1,4 +1,4 @@
-from bayesflare import Lightcurve
+from bayesflare.bayesflare import Lightcurve
 import bayesflare as pf
 from math import *
 import numpy as np

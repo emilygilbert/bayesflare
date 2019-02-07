@@ -233,7 +233,7 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     try:
         window_size = np.abs(np.int(window_size))
         order = np.abs(np.int(order))
-    except ValueError, msg:
+    except ValueError: # as msg:
         raise ValueError("window_size and order have to be of type int")
     if window_size % 2 != 1 or window_size < 1:
         raise TypeError("window_size size must be a positive odd number")
@@ -288,7 +288,7 @@ def highpass_filter_lightcurve(lightcurve, knee=(1./(0.3*86400.))):
     z = y[np.floor(len(y)/2):]
     return z
 
-    
+
 def running_median(y, window):
     """
     A method to subtract a running median for smoothing data.
@@ -300,17 +300,17 @@ def running_median(y, window):
     window : int
        The number of time bins to use for the running median. At edges
        the window will be shorter.
-       
+
     Returns
     -------
     ffit : :class:`numpy.ndarray`
        A 1D array containing the running median of the data time series.
     """
-    
+
     ffit = np.array([])
     idxs = np.arange(len(y))
     halfwin = int(window/2)
-    
+
     for i in range(len(y)):
         v = (idxs < (idxs[i]+halfwin)) & (idxs > (idxs[i]-halfwin))
         ffit = np.append(ffit, np.median(y[v]))

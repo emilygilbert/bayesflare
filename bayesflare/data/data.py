@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pyfits
+from astropy.io import fits as pyfits
 import glob
 import numpy as np
 import bayesflare as bf
@@ -399,25 +399,25 @@ class Lightcurve():
 
         # store un-detrending light curve
         self.ulc = np.copy(self.clc)
-        
+
         if method == 'savitzkygolay':
             if nbins is None or order is None:
                 raise ValueError("Number of bins, or polynomial order, for Savitsky-Golay filter not set")
-          
+
             ffit = bf.savitzky_golay(self.clc, nbins, order)
             self.clc = (self.clc - ffit)
             self.detrend_fit = np.copy(ffit)
         elif method == 'runningmedian':
             if nbins is None:
                 raise ValueError("Number of bins for running median filter not set")
-          
+
             ffit = bf.running_median(self.clc, nbins)
             self.clc = (self.clc - ffit)
             self.detrend_fit = np.copy(ffit)
         elif method == 'highpassfilter':
             if knee is None:
                 raise ValueError("Knee frequency for high-pass filter not set.")
-          
+
             dlc = bf.highpass_filter_lightcurve(self, knee=knee)
             self.clc = np.copy(dlc.clc)
         else:
@@ -440,4 +440,3 @@ class Lightcurve():
         pl.xlabel('Time [days]')
         pl.ylabel('Luminosity')
         pl.show()
-

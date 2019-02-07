@@ -46,5 +46,3 @@ from .stats.bayes import Bayes, ParameterEstimationGrid
 from .misc.misc import nextpow2, mkdir
 from .inject.inject import inject_model
 from .simulate.simulate import SimLightcurve, simulate_single
-
-

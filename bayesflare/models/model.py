@@ -1,7 +1,7 @@
 import numpy as np
 from math import floor, sqrt
 import bayesflare as bf
-from ..stats.general import logminus
+#from ..stats.general import logminus
 
 
 class Model():
@@ -1046,4 +1046,3 @@ class ModelCurve():
            The sample frequency.
         """
         return 1.0/self.dt()
-
