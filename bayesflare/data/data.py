@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+<<<<<<< HEAD
 from astropy.io import fits as pyfits
+=======
+>>>>>>> b6c66bffa30896b97ee366eb0d1d94abd8814292
 import glob
 import numpy as np
+from astropy.io import fits
 import bayesflare as bf
 import scipy.signal as signal
 import matplotlib.mlab as ml
@@ -233,7 +237,7 @@ class Lightcurve():
             raise NameError("[Error] No light curve file given")
 
         try:
-            dcurve = pyfits.open(curve)
+            dcurve = fits.open(curve)
         except IOError:
             raise NameError("[Error] An IO error occured when trying to access "+curve )
             mis_file = open('ioerror-files.log', 'a')

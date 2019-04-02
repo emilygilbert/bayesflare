@@ -1,5 +1,8 @@
 """
 """
+
+from __future__ import print_function
+
 from ..misc import mkdir
 from ..noise import estimate_noise_ps, estimate_noise_tv
 from ..models import *
@@ -598,12 +601,12 @@ class OddsRatioDetector():
             parameter points.
         """
 
-        if not flareparams.has_key('taugauss'):
+        if 'taugauss' not in flareparams:
             raise ValueError("Error... dictionary has no parameter 'taugauss'")
-        if not flareparams.has_key('tauexp'):
+        if 'tauexp' not in flareparams:
             raise ValueError("Error... dictionary has no parameter 'tauexp'")
 
-        if not flareparams.has_key('t0'):
+        if 't0' not in flareparams:
             flareparams['t0'] = (np.inf,)
 
         flareparams['amp'] = (1.,)
@@ -668,7 +671,7 @@ class OddsRatioDetector():
         """
         self.noiseimpulse = noiseimpulse
 
-        if not noiseimpulseparams.has_key('t0'):
+        if 't0' not in noiseimpulseparams:
             raise ValueError("Error... no 't0' value set")
 
         noiseimpulseparams['amp'] = (1.,)
@@ -700,10 +703,10 @@ class OddsRatioDetector():
         self.noiseexpdecay = noiseexpdecay
         self.noiseexpdecaywithreverse = withreverse
 
-        if not noiseexpdecayparams.has_key('tauexp'):
+        if 'tauexp' not in noiseexpdecayparams:
             raise ValueError("Error... 'tauexp' parameter range not given.")
 
-        if not noiseexpdecayparams.has_key('t0'):
+        if 't0' not in noiseexpdecayparams:
             noiseexpdecayparams['t0'] = (np.inf,)
 
         noiseexpdecayparams['amp'] = (1.,)
@@ -728,7 +731,7 @@ class OddsRatioDetector():
         """
         self.noisestep = noisestep
 
-        if not noisestepparams.has_key('t0'):
+        if 't0' not in noisestepparams:
             raise ValueError("Error... 't0' parameter range not set.")
 
         noisestepparams['amp'] = (1.,)
@@ -844,7 +847,7 @@ class OddsRatioDetector():
             valrange = np.arange(int(self.bglen/2), len(Of.lnBmargAmp)-int(self.bglen/2))
             ts = np.copy(self.lightcurve.cts[valrange])
         else:
-            valrange = range(0, len(Of.lnBmargAmp))
+            valrange = list(range(0, len(Of.lnBmargAmp)))
             ts = np.copy(self.lightcurve.cts)
 
         lnO = []

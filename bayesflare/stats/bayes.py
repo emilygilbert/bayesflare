@@ -1,6 +1,9 @@
 """
 
 """
+
+from __future__ import print_function
+
 from math import log
 import numpy as np
 from copy import copy, deepcopy
@@ -64,7 +67,7 @@ def spectrum_peak_frequencies(lc, npeaks=5):
 
     # return the frequecies of the n largest peaks
     if len(pamps) < npeaks:
-        print >> sys.stderr, "There were fewer peaks than requested (%d), so returning %d" % (npeaks, len(pamps))
+        print("There were fewer peaks than requested (%d), so returning %d" % (npeaks, len(pamps)), file=sys.stderr)
         npeaks = len(pamps)
 
     lc.sinusoid_freqs = freqs[pidxs[:npeaks]]
