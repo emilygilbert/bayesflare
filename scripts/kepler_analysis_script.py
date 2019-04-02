@@ -6,14 +6,15 @@ Script to run detection for Kepler Q1 pulsars
 
 # use API to get list of files (greatly inspired by kplr python API) http://dan.iel.fm/kplr/
 import json
-import urllib
-import urllib2
+from urllib.request import urlopen
+import urllib.parse
 import os
 import sys
 import datetime
 import numpy as np
-import bayesflare as bf
 from copy import copy
+sys.path.append('/Users/emilygilbert/code')
+import bayesflare as bf
 
 from optparse import OptionParser
 
@@ -90,20 +91,20 @@ Williams, Fletcher and Grant (2014).
 
   # check output file is given
   if not opts.__dict__['outfile']:
-    print "Error... no output file specified!"
+    print("Error... no output file specified!")
     sys.exit(0)
   else:
     outfile = opts.outfile
 
-  print """
+  print( """
 If file %s exists then the analysis will restart with the final star \
 in that files and append the data. If you want to restart from scratch \
 then delete the file.
-      """ % outfile
+      """ % outfile)
 
   # local directory containing kepler data
   if not opts.__dict__['filedir']:
-    print "Error... no Kepler data directory specified!"
+    print("Error... no Kepler data directory specified!")
     sys.exit(0)
   else:
     datadir = opts.filedir
@@ -130,12 +131,12 @@ then delete the file.
   # MAST url
   mast_url = "http://archive.stsci.edu/kepler/{0}/search.php"
 
-  r = urllib2.Request(mast_url.format("data_search"), data=urllib.urlencode(params))
-  handler = urllib2.urlopen(r) # get the data
+  r = urllib.request.Request(mast_url.format("data_search"), data=urllib.parse.urlencode(params))
+  handler = urlopen(r) # get the data
 
   code = handler.getcode()
   if code != 200:
-    print "Error... problem getting data."
+    print("Error... problem getting data.")
 
   txt = handler.read()
   results = json.loads(txt) # parse into JSON format
@@ -161,7 +162,7 @@ then delete the file.
   ebtable = 'http://iopscience.iop.org/1538-3881/141/3/83/suppdata/aj376947t1_mrt.txt'
   Npreebveto = len(kids)
   try:
-    f = urllib.urlopen(ebtable)
+    f = urlopen(ebtable)
     ebs = [int(v.split()[0]) for v in f.readlines()[45:]] # ignore header lines
     f.close()
 
@@ -169,17 +170,17 @@ then delete the file.
 
     kids = kidstmp
   except:
-    print "Error... could not get Kepler eclipsing binary table"
+    print("Error... could not get Kepler eclipsing binary table")
     sys.exit(0)
 
-  print "%d stars removed by eclipsing binary veto" % (Npreebveto - len(kids))
+  print("%d stars removed by eclipsing binary veto" % (Npreebveto - len(kids)))
 
   # REMOVE ANY STARS WITH PERIODS OF LESS THAN A GIVEN THRESHOLD
 
   # URL of table 1 from McQuillan, A. et al (2014) ApJS, 211, 24 http://arxiv.org/abs/1402.5694
   periodtable = "http://iopscience.iop.org/0067-0049/211/2/24/fulltext/apjs492452t1_mrt.txt"
   try:
-    f = urllib.urlopen(periodtable)
+    f = urlopen(periodtable)
     pt = f.readlines()
     f.close()
 
@@ -190,27 +191,27 @@ then delete the file.
     periodtable = "http://arxiv.org/src/1402.5694v2/anc/Table_1_Periodic.txt"
 
     try:
-      f = urllib.urlopen(periodtable)
+      f = urlopen(periodtable)
       pt = f.readlines()
       f.close()
 
       # ignore the one header line and extract the KIC and period (days)
       kp = [(int((v.split(','))[0]), float((v.split(','))[4])) for v in pt[1:]]
     except:
-      print "Error... could not get Kepler period table"
+      print("Error... could not get Kepler period table")
       sys.exit(0)
 
   # URL of table 2 from McQuillan, A. et al (2014) ApJS, 211, 24 http://arxiv.org/abs/1402.5694
   periodtable2 = "http://arxiv.org/src/1402.5694v2/anc/Table_2_Non_Periodic.txt"
   try:
-    f = urllib.urlopen(periodtable2)
+    f = urlopen(periodtable2)
     pt = f.readlines()
     f.close()
 
     # ignore the one header line and extract the period values that are not NaN (append to previoud list)
     kp += [(int((v.split(','))[0]), float((v.split(','))[4])) for v in pt[1:] if (v.split(','))[4] != 'nan']
   except:
-    print "Error... could not get Kepler period table 2"
+    print("Error... could not get Kepler period table 2")
     sys.exit(0)
 
   # URL of table from Reinhold, T. et al (2013) A&A, 560 http://arxiv.org/abs/1308.1508
@@ -218,7 +219,7 @@ then delete the file.
   # (see README at http://cdsarc.u-strasbg.fr/vizier/ftp/cats/J/A+A/560/A4/ReadMe)
   # this table contains primary and secondary periods and we will veto both
   try:
-    f = urllib.urlopen(periodtable3)
+    f = urlopen(periodtable3)
     pt = f.readlines()
     f.close()
 
@@ -228,7 +229,7 @@ then delete the file.
     # now get secondary periods (ignore cases where no period is given [marked by a '---'])
     kp += [(int((v.split())[0]), float((v.split())[3])) for v in pt if (v.split())[3] != '---']
   except:
-    print "Error... could not get third Kepler period table"
+    print("Error... could not get third Kepler period table")
     sys.exit(0)
 
   periodlim = 2.0 # 2 day period limit threshold
@@ -285,9 +286,9 @@ then delete the file.
         outdict = json.load(f)
         f.close()
       except:
-        print "Error... could not open output file. File will be overwritten during analysis"
+        print("Error... could not open output file. File will be overwritten during analysis")
     except:
-      print "Error... could not open output file. File will be overwritten during analysis"
+      print("Error... could not open output file. File will be overwritten during analysis")
 
 
   # create dictionary of output data
@@ -324,7 +325,7 @@ then delete the file.
       totflares = outdict["No. flares"]
       nf = outdict["No. stars analysed"]
     except:
-      print "No star list in file. Analysis will start from beginning."
+      print("No star list in file. Analysis will start from beginning.")
       outdict["Star list"] = []
       outdict["Star data"] = []
       outdict["Flaring stars"] = []
@@ -350,22 +351,22 @@ then delete the file.
         json.dump(outdict, f, indent=2)
         f.close()
       except:
-        print "Error... problem outputting JSON data file"
+        print("Error... problem outputting JSON data file")
         sys.exit(0)
 
-    print "Iteration %d: KIC %d" % (i+1, kids[i]["kepid"])
+    print("Iteration %d: KIC %d" % (i+1, kids[i]["kepid"]))
 
     flarelc = bf.Lightcurve(curve=kfile, maxgap=maxgap)
     # check if the data had gaps
     if flarelc.datagap:
-      print "KIC %d had a data gap greater than %d. Ignoring this star." % (kids[i]["kepid"], maxgap)
+      print("KIC %d had a data gap greater than %d. Ignoring this star." % (kids[i]["kepid"], maxgap))
       outdict["Rejected stars"].append(kids[i]["kepid"])
       continue
 
     # check if star had already been analysed
     if starlist != None:
       if kids[i]["kepid"] in starlist:
-        print "KIC %d has already been analysed" % kids[i]["kepid"]
+        print("KIC %d has already been analysed" % kids[i]["kepid"])
         continue
 
     nf = nf + 1
@@ -392,7 +393,7 @@ then delete the file.
 
     # write out flare info for star
     if Nflares > 0:
-      print "Found %d flares for star KIC %d" % (Nflares, kids[i]["kepid"])
+      print("Found %d flares for star KIC %d" % (Nflares, kids[i]["kepid"]))
 
       totflares = totflares + Nflares
       outdict["No. flares"] = totflares
@@ -424,7 +425,7 @@ then delete the file.
       elif odds.noiseestmethod == 'tailveto':
         sk = bf.estimate_noise_tv(tmpcurve.clc, sigma=odds.tvsigma)[0]
       else:
-        print "Error... Noise estimation method must be 'powerspectrum' or 'tailveto'"
+        print("Error... Noise estimation method must be 'powerspectrum' or 'tailveto'")
         sys.exit(0)
 
       datadict = {
@@ -451,5 +452,5 @@ then delete the file.
     json.dump(outdict, f, indent=2)
     f.close()
   except:
-    print "Error... problem outputting JSON data file"
+    print("Error... problem outputting JSON data file")
     sys.exit(0)
