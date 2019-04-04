@@ -9,7 +9,7 @@ import numpy as np
 from copy import copy, deepcopy
 from ..noise import estimate_noise_ps, estimate_noise_tv, highpass_filter_lightcurve, savitzky_golay
 from ..models import *
-from ..general import *
+#from .general import *
 #from .thresholding import Thresholder
 from math import *
 import matplotlib.gridspec as gridspec

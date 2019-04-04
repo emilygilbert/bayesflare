@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+<<<<<<< HEAD
+from astropy.io import fits as pyfits
+=======
+>>>>>>> b6c66bffa30896b97ee366eb0d1d94abd8814292
 import glob
 import numpy as np
 from astropy.io import fits
