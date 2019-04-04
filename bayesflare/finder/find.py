@@ -8,7 +8,7 @@ from ..noise import estimate_noise_ps, estimate_noise_tv
 from ..models import *
 from ..stats import *
 from math import log
-import pyfits
+from astropy.io import fits as pyfits
 import numpy as np
 from copy import copy, deepcopy
 
