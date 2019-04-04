@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-
+# cython: language_level=3, boundscheck=False
 from setuptools import setup, find_packages
 from setuptools import Extension
 from setuptools.command.build_ext import build_ext as _build_ext
@@ -74,4 +74,3 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis'
     ]
 )
-
